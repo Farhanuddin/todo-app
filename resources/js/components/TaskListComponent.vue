@@ -1,4 +1,19 @@
 <template>
+
+    <div class="list-wrapper">
+       <ul class="d-flex flex-column-reverse todo-list">
+            <li  v-for="task in tasks">
+                <span :class="{'done-task': task.completed }"> {{task.title}}</span>
+                <div style="margin-left:auto">
+                    <i v-if="!task.completed"  class="fa fa-pencil-square-o" data-toggle="modal" data-target="#editModal" aria-hidden="true" @click="addEditId(task.id)"></i>
+                    <i v-if="!task.completed"  class="fa fa-check-square" aria-hidden="true" @click="completeTask(task.id)"></i>
+                    <i class="fa fa-times" aria-hidden="true" @click="deleteTask(task.id)"></i>
+                </div>
+            </li>
+        </ul>
+        <editTask v-if="showEditModal" :editId="editId"></editTask>
+    </div>
+<!--
     <div class="container">
         <div class="row justify-content-center">
             <div class="col-md-8">
@@ -22,6 +37,7 @@
             </div>
         </div>
     </div>
+    --> 
 </template>
 
 <script>

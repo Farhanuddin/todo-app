@@ -15,6 +15,9 @@
         <!-- Toastr -->
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/css/toastr.css" type="text/css" >
 
+        <!-- Fonts -->
+        <link rel="stylesheet" href="{{asset('css/font-awesome-4.7.0/css/font-awesome.min.css') }}" >
+
         <!-- Custom CSS -->
 		<link href="{{asset('css/custom.css')}}" rel="stylesheet" type="text/css" >
     </head>

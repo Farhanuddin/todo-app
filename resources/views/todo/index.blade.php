@@ -7,9 +7,7 @@
 
 @section('content')
     
-	<div id="app" class="container">
-	
-	    <h1>Todo List.</h1>
+	<div id="app" class="container">	
 	    <app-component>	    	
 	    </app-component>
 	</div>

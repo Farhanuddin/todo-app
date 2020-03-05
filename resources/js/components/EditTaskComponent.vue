@@ -1,28 +1,28 @@
 <template>
   <!-- Modal -->
-  <div class="modal fade" id="editModal" role="dialog">
-    <div class="modal-dialog">
-    
-      <!-- Modal content-->
-      <div class="modal-content">
-        <div class="modal-header">
-          <button type="button" class="close" data-dismiss="modal">&times;</button>
-          <h4 class="modal-title">Edit Task</h4>
-        </div>
-        <div class="modal-body">
+  <div class="modal" id="editModal" tabindex="-1" role="dialog">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Edit Task</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
           <form action="#" method="PUT" @submit.prevent="editTask()">
             <input type="text" v-model="editText">
-            <button type="submit" class="btn btn-default">Edit</button>                
-          </form>
-        </div>
-        <div class="modal-footer">
-          <button type="button" class="btn btn-default" data-dismiss="modal" id="editModalClose" @click="closeModal">Close</button>
-        </div>
-        
+            <button type="submit" class="btn btn-primary">Save changes</button>
+        </form>
+          
       </div>
-      
+      <div class="modal-footer">
+        
+        <button type="button" class="btn btn-secondary" data-dismiss="modal" id="editModalClose" @click="closeModal">Close</button>
+      </div>
     </div>
   </div>
+</div>
 </template>
 
 <script>

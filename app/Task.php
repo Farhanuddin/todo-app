@@ -17,7 +17,7 @@ class Task extends Model
 
     //Get All Tasks
     public function getTasks($scope){
-    	return $scope->orderBy('id', 'desc')->get()->toArray();
+    	return $scope->get()->toArray();
     }
 
     //Delete Task
