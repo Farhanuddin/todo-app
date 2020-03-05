@@ -17,12 +17,20 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
     return $request->user();
 });
 
+//Get All Tasks..
 Route::get('gettasks', 'TodoController@getTasks');
 
-Route::post('add-task', 'TodoController@store');
+//Add Task
+Route::post('add-task', 'TodoController@store')->name('api.add-task');
 
+//Delete Single Task
 Route::delete('delete-task/{taskid}', 'TodoController@destroy');
 
+//Get Single Task
 Route::get('gettask/{id}', 'TodoController@show');
 
+//Update Single Task
 Route::put('gettask', 'TodoController@update');
+
+//Mark Task Completed..
+Route::put('gettask-complete', 'TodoController@markCompleted');

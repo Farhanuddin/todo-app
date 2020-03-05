@@ -12,13 +12,11 @@
         <div class="modal-body">
           <form action="#" method="PUT" @submit.prevent="editTask()">
             <input type="text" v-model="editText">
-                {{editText }}
-              <button type="submit" class="btn btn-default">Edit</button>
-                
+            <button type="submit" class="btn btn-default">Edit</button>                
           </form>
         </div>
         <div class="modal-footer">
-          <button type="button" class="btn btn-default" data-dismiss="modal" @click="closeModal">Close</button>
+          <button type="button" class="btn btn-default" data-dismiss="modal" id="editModalClose" @click="closeModal">Close</button>
         </div>
         
       </div>
@@ -41,13 +39,11 @@
             };
         },
 
-        mounted() {
-            
-            console.log('Edit Task mounted. id: '+ this.id);
-
+        mounted() {            
+            //Get Task detail for editing..
             axios.get('api/gettask/'+this.id).then((res) => { 
-                console.log(res.data);
                 this.editText = res.data.title;
+
             }).catch(
                 (err) => console.error(err)
             ); 
@@ -58,17 +54,26 @@
 
             editTask(id){
 
-                axios.put('api/gettask/',{ id:this.id,title:this.editText }).then((res) => { 
-                    console.log(res.data);
-                    this.editText = res.data.title;
+                axios.put('api/gettask/',{ id:this.id,title:this.editText }).then((res) => {
+
+                    //Par Task Update Response..
+                    if(res.data.status == 200){
+                        toastr.success(res.data.msg); 
+                    }else{
+                        toastr.error('Something went wrong.' + res.data.msg);
+                    }
+                    
+                    //Re-execute Grab tasks event..
+                    this.$root.$emit('grabTasks');
+
                 }).catch(
                     (err) => console.error(err)
                 );
 
             },
 
+            //Execute Parent Component close event..
             closeModal(){
-                console.log('close modal 1');
                 this.$root.$emit('closeModal');
             }
         }

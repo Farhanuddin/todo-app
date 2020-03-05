@@ -158,29 +158,30 @@ class TodoController extends Controller
             $response['status'] = 200;
             $response['data']   = null;
             $response['msg']    = '';
-            $inserted           = true;
-
-            if($request->has('id') &&  $request->has('title')){
+            $updatedTask        = true;
+           // return $request->input(); 
+            if($request->has('id') && $request->has('title')){
 
                 $taskId                       = $request->input('id');
                 $taskUpdateArray              = array();
                 $taskUpdateArray['title']     = $request->input('title');
                 $taskUpdateArray['completed'] = 0;
 
-                $updatedTask = $this->task->updateTask($taskUpdateArray, $id);
+                $updatedTask = $this->task->updateTask($this->task, $taskUpdateArray, $taskId);
 
-                if($inserted){
-                    $response['status'] = 200;
-                    $response['msg']    = 'Task Successfully Added..';
+                if($updatedTask){
+                    $response['data']['title'] = $taskUpdateArray['title'];
+                    $response['status']        = 200;
+                    $response['msg']           = 'Task Successfully Updated..';
                 }else{
                     $response['status'] = 400;
-                    $response['msg']    = 'Task Couldnot be Added..';
+                    $response['msg']    = 'Task Couldnot be Updated..';
                 }
 
             }else{
                 $response['status'] = 500;
                 $response['data']   = null;
-                $response['msg']    = 'Cannot add Task, Task is Empty';            
+                $response['msg']    = 'Cannot Update Task, Task is Empty';            
             }
 
         }catch(\Exception $ex){
@@ -212,12 +213,54 @@ class TodoController extends Controller
             
             if($deleted){
                 $response['status'] = 204;
-                $response['data']   = 'Deleted Successfully..';
-                $response['msg']    = '';
+                $response['data']   = null;
+                $response['msg']    = 'Task Deleted Successfully..';
             }
 
         }
 
         return $response;
+    }
+
+    //Mark Task Complete
+    public function markCompleted(Request $request){
+
+        try{
+
+            $response           = array();
+            $response['status'] = 200;
+            $response['data']   = null;
+            $response['msg']    = '';
+            $updatedTask        = true;
+            
+            //return $request->input(); 
+            
+            if($request->has('taskid')){
+
+                $taskId      = $request->input('taskid');
+
+                $updatedTask = $this->task->markTaskComplete($this->task, $taskId);
+
+                if($updatedTask){
+                    $response['status']        = 200;
+                    $response['msg']           = 'Task Completed Successfully..';
+                }else{
+                    $response['status'] = 400;
+                    $response['msg']    = 'Task Couldnot be Completely..';
+                }
+
+            }else{
+                $response['status'] = 500;
+                $response['data']   = null;
+                $response['msg']    = 'Cannot Complete Task, Task id is Empty';            
+            }
+
+        }catch(\Exception $ex){
+                $response['status'] = 500;                
+                $response['data']   = null;
+                $response['msg']    = $ex->getMessage();
+        }
+
+        return $response;        
     }
 }

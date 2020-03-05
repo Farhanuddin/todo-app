@@ -20,17 +20,20 @@ window.Vue = require('vue');
 // const files = require.context('./', true, /\.vue$/i)
 // files.keys().map(key => Vue.component(key.split('/').pop().split('.')[0], files(key).default))
 
-Vue.component('example-component', require('./components/ExampleComponent.vue').default);
+//Vue.component('example-component', require('./components/ExampleComponent.vue').default);
 
 //Task List Component..
 Vue.component('task-list', require('./components/TaskListComponent.vue').default);
 
+//Add Task Component..
 Vue.component('add-task', require('./components/AddTaskComponent.vue').default); 
 
-Vue.component('task', require('./components/TaskComponent.vue').default);
+//Vue.component('task', require('./components/TaskComponent.vue').default);
 
+//Edit Task Component..
 Vue.component('editTask', require('./components/EditTaskComponent.vue').default);
 
+//App Component..
 Vue.component('app-component', require('./components/AppComponent.vue').default);
 
 /**
@@ -42,6 +45,3 @@ Vue.component('app-component', require('./components/AppComponent.vue').default)
 const app = new Vue({
     el: '#app',
 });
-
-console.log('in vue.js');
-console.log(app);

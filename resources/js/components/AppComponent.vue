@@ -16,8 +16,5 @@
                 test: 'farhan'
             };
         },
-
-        methods: {
-        }
     }
 </script>

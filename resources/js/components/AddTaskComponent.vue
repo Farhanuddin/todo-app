@@ -23,17 +23,31 @@
 
         methods: {
 
-            addTask() {
-                console.log(this.inputTask);
-                axios.post('api/add-task', { task: this.inputTask } )
-                      .then( (res) => {
-                        console.log(res);
-                        //Empty Input 
-                        this.inputTask = '';
+            //Add Task to database..
+            addTask() { 
+            console.log(this.inputTask);
+                if(this.inputTask != ''){
+                    axios.post('api/add-task', { task: this.inputTask } )
+                          .then( (res) => {
 
-                        this.$root.$emit('grabTasks');
+                            //Empty Input 
+                            this.inputTask = '';
 
-                      }).catch( (err) => console.log(err) );
+                            //Par Task Update Response..
+                            if(res.data.status == 200){
+                                toastr.success(res.data.msg); 
+                            }else{
+                                toastr.error('Something went wrong.' + res.data.msg);
+                            }
+                        
+                            //Grab all updated tasks via event..
+                            this.$root.$emit('grabTasks');
+
+                          }).catch( (err) => console.log(err) );                
+                }else{
+                    alert('Task cannot be Empty');
+                }
+
             }
         }
     }

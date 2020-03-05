@@ -8,9 +8,12 @@
                     <div class="card-body">
                         Task list Component.
                         <ul>
-                            <li v-for="task in tasks">
+                            <li v-for="task in tasks" :class="{'done-task': task.completed }">
                                 {{task.title}}
-                                <button type="button" class="btn btn-info btn-lg" data-toggle="modal" data-target="#editModal" @click="addEditId(task.id)">Edit</button>
+                                <button type="button" v-if="!task.completed" class="btn btn-info btn-lg" data-toggle="modal" data-target="#editModal" @click="addEditId(task.id)">Edit</button>
+                                
+                                <button type="button" v-if="!task.completed" @click="completeTask(task.id)">Complete</button>  
+
                                 <button type="button" @click="deleteTask(task.id)">Delete</button>
                             </li>
                         </ul>
@@ -37,45 +40,50 @@
         },
 
         mounted() {
-            console.log('Task List Component mounted.');
-            console.log(this.tasks);
-
-            //grabTask Even Listener..
+ 
+            //grabTask Event Listener..
             this.$root.$on('grabTasks', data => {
                 this.grabAllTasks();
             });
 
-            //grabTask Even Listener..
+            //CloseModal Event Listener..
             this.$root.$on('closeModal', data => {
                 this.closeModal();
             });
         },
 
         created() {
-            //Grab all Tasks
+            //Grab all Tasks and update the task property..
             this.grabAllTasks();
         },
 
         methods: {
 
-            //Grab all Tasks
+            //Grab all Tasks and update the task property..
             grabAllTasks() {
 
                 axios.get('api/gettasks').then((res) => {
-                    console.log('in axios'); 
-                    console.log(res.data.data); 
                     this.tasks = res.data.data;
                 }).catch(
                     (err) => console.error(err)
                 );
             },
 
+            //Delete single Task..
             deleteTask(taskId) {            
     
-                if(confirm("Delete this Task?")){
-                    
+                if(confirm("Delete this Task?")){                    
+                      
                       axios.delete('api/delete-task/'+taskId).then((res) => {
-                        
+
+
+                        if(res.data.status == 204){
+                            toastr.error(res.data.msg); 
+                        }else{
+                            toastr.error('Something went wrong.' + res.data.msg);
+                        }
+
+                      //Update Tasks list properties..
                       this.grabAllTasks();
 
                     }).catch(
@@ -86,16 +94,45 @@
             
             },
 
+            //Assign edit id properties on updaet click
             addEditId(id){
                 this.editId = id;
                 this.showEditModal = true;
             },
 
+            //Close Modal and remove edit variables assignment..
             closeModal(){
                 this.editId = '';
                 this.showEditModal = false;
+            },
+
+            //Complete Task
+            completeTask(id){
+
+                axios.put('api/gettask-complete/',{ taskid:id }).then((res) => {
+                    console.log(res);
+                    //Par Task Update Response..
+                    if(res.data.status == 200){
+                        toastr.success(res.data.msg); 
+                    }else{
+                        toastr.error('Something went wrong.' + res.data.msg);
+                    }
+                    
+                    //Re-execute Grab tasks event..
+                    this.$root.$emit('grabTasks');
+
+                }).catch(
+                    (err) => console.error(err)
+                );
             }
 
         }
     }
 </script>
+
+<style scoped>
+
+.done-task{
+    text-decoration: line-through;    
+}
+</style>

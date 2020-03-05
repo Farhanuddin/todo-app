@@ -17,7 +17,7 @@ class Task extends Model
 
     //Get All Tasks
     public function getTasks($scope){
-    	return $scope->all()->toArray();
+    	return $scope->orderBy('id', 'desc')->get()->toArray();
     }
 
     //Delete Task
@@ -27,6 +27,16 @@ class Task extends Model
 
     //Update Task
     public function updateTask($scope, $data, $id){
-    	return $scope->find($taskId)
+    	$task            = $scope->find($id);
+    	$task->title     = $data['title'];
+    	$task->completed = $data['completed'];
+    	return $task->save();
+    }
+
+    //Mark Task Completed..
+    public function markTaskComplete($scope, $id){
+        $task            = $scope->find($id);
+        $task->completed = 1;
+        return $task->save();        
     }
 }
