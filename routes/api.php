@@ -34,3 +34,6 @@ Route::put('gettask', 'TodoController@update');
 
 //Mark Task Completed..
 Route::put('gettask-complete', 'TodoController@markCompleted');
+
+//Clear Completed Tasks
+Route::post('clear-complete-task', 'TodoController@clearCompleteTasks')->name('api.add-task');

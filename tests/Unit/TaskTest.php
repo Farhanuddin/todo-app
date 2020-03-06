@@ -5,6 +5,7 @@ namespace Tests\Unit;
 use Tests\TestCase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use App\Task;
 
 class TaskTest extends TestCase
 {
@@ -18,16 +19,25 @@ class TaskTest extends TestCase
         $this->assertTrue(true);
     }
 
-    public function test_create_task(){
-    	echo 123;
-    	die();
-    	
-        $taskInsertArray              = array();
-        $taskInsertArray['title']     = $this->faker->name;
-        $taskInsertArray['completed'] = $this->faker->boolean;    	
-    
-        $this->post(route('api.add-task'), $taskInsertArray)
-            ->assertStatus(200)
-            ->assertJson($taskInsertArray);
+    public function test_can_create_task(){
+
+        $response = $this->json('POST', '/api/add-task', ['task' => 'Do Shopping 2']);
+
+        $response
+            ->assertStatus(200);
+
+        //$response->dump();
     }
+
+    public function test_can_delete_task(){
+
+        $taskId   = 53;
+
+        $response = $this->json('DELETE', 'api/delete-task/'.$taskId);
+
+        $response
+            ->assertStatus(200);
+
+        //$response->dump();
+    }    
 }

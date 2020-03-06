@@ -16,8 +16,15 @@ class Task extends Model
     }
 
     //Get All Tasks
-    public function getTasks($scope){
-    	return $scope->get()->toArray();
+    public function getTasks($scope, $completed=null){
+    	
+        $result = $scope;
+
+        if( !is_null($completed) ){
+            $result = $result->where('completed', $completed);
+        }
+
+        return $result->get()->toArray();
     }
 
     //Delete Task
@@ -38,5 +45,10 @@ class Task extends Model
         $task            = $scope->find($id);
         $task->completed = 1;
         return $task->save();        
+    }
+
+    //Clear Completed Tasks
+    public function clearCompletedTasks($scope){
+        return $scope->where('completed', 1)->delete();
     }
 }

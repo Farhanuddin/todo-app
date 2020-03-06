@@ -27,7 +27,7 @@
         methods: {
 
             //Add Task to database..
-            addTask() { 
+            addTask() {
 
                 if(this.inputTask != ''){ 
                     if(this.inputTask.length < 100){

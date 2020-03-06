@@ -24,18 +24,22 @@ class TodoController extends Controller
         return view('todo.index');
     }
 
-    public function getTasks(){
+    public function getTasks(Request $request){
         
         $response           = array();
         $response['status'] = 200;
         $response['data']   = null;
         $response['msg']    = '';
-
+        $completed          = null;
         $tasks              = null; 
 
         try{
-    
-            $tasks = $this->task->getTasks($this->task);
+
+            if($request->has('completed')){
+                $completed = $request->input('completed');
+            }
+
+            $tasks = $this->task->getTasks($this->task, $completed);
 
             if( is_array($tasks) && count($tasks) > 0){
                 
@@ -159,7 +163,7 @@ class TodoController extends Controller
             $response['data']   = null;
             $response['msg']    = '';
             $updatedTask        = true;
-           // return $request->input(); 
+
             if($request->has('id') && $request->has('title')){
 
                 $taskId                       = $request->input('id');
@@ -261,6 +265,36 @@ class TodoController extends Controller
                 $response['msg']    = $ex->getMessage();
         }
 
-        return $response;        
+        return $response;    
+    }
+
+    //Clear Completed Tasks
+    public function clearCompleteTasks(Request $request){
+
+        try{
+
+            $response           = array();
+            $response['status'] = 200;
+            $response['data']   = null;
+            $response['msg']    = '';
+            $clearTasks         = false;
+
+            $clearTasks = $this->task->clearCompletedTasks($this->task);
+
+            if($clearTasks){
+                $response['status']        = 200;
+                $response['msg']           = 'Tasks Cleared Successfully..';
+            }else{
+                $response['status'] = 400;
+                $response['msg']    = 'Tasks Couldnot be Cleared..';
+            }
+
+        }catch(\Exception $ex){
+                $response['status'] = 500;                
+                $response['data']   = null;
+                $response['msg']    = $ex->getMessage();
+        }
+
+        return $response;
     }
 }

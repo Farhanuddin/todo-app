@@ -1,6 +1,11 @@
 <template>
 
     <div class="list-wrapper">
+       <button type="button" class="btn btn-success" @click="grabAllTasks" >All</button>
+       <button type="button" class="btn btn-info" @click="grabCompletedTasks" >Completed</button>
+       <button type="button" class="btn btn-warning" @click="grabActiveTasks" >Active</button>
+       <button type="button" class="btn btn-dark" @click="clearCompletedTasks" >Clear Completed</button>
+      <!--  <button type="button" class="btn btn-warning" @click="removeCompletedTasks" >Remove Completed</button> -->
        <ul class="d-flex flex-column-reverse todo-list">
             <li  v-for="task in tasks">
                 <span :class="{'done-task': task.completed }"> {{task.title}}</span>
@@ -13,31 +18,6 @@
         </ul>
         <editTask v-if="showEditModal" :editId="editId"></editTask>
     </div>
-<!--
-    <div class="container">
-        <div class="row justify-content-center">
-            <div class="col-md-8">
-                <div class="card">
-                    <div class="card-header">TaskList</div>
-                    <editTask v-if="showEditModal" :editId="editId"></editTask>
-                    <div class="card-body">
-                        Task list Component.
-                        <ul>
-                            <li v-for="task in tasks" :class="{'done-task': task.completed }">
-                                {{task.title}}
-                                <button type="button" v-if="!task.completed" class="btn btn-info btn-lg" data-toggle="modal" data-target="#editModal" @click="addEditId(task.id)">Edit</button>
-                                
-                                <button type="button" v-if="!task.completed" @click="completeTask(task.id)">Complete</button>  
-
-                                <button type="button" @click="deleteTask(task.id)">Delete</button>
-                            </li>
-                        </ul>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-    --> 
 </template>
 
 <script>
@@ -85,6 +65,25 @@
                 );
             },
 
+            //Grab Completed Tasks
+            grabCompletedTasks() {
+
+                axios.get('api/gettasks?completed=1').then((res) => {
+                    this.tasks = res.data.data;
+                }).catch(
+                    (err) => console.error(err)
+                );
+            },
+
+            //Grab Completed Tasks
+            grabActiveTasks() {
+
+                axios.get('api/gettasks?completed=0').then((res) => {
+                    this.tasks = res.data.data;
+                }).catch(
+                    (err) => console.error(err)
+                );
+            },            
             //Delete single Task..
             deleteTask(taskId) {            
     
@@ -140,7 +139,31 @@
                 }).catch(
                     (err) => console.error(err)
                 );
+            },
+
+            //Clear Completed Tasks..
+            clearCompletedTasks(){
+
+                axios.post('api/clear-complete-task')
+                      .then( (res) => {
+
+                        //Empty Input 
+                        this.inputTask = '';
+
+                        //Par Task Update Response..
+                        if(res.data.status == 200){
+                            toastr.success(res.data.msg); 
+                            this.grabAllTasks();
+                        }else{
+                            toastr.error('Something went wrong.' + res.data.msg);
+                        }
+                    
+                        //Grab all updated tasks via event..
+                        this.$root.$emit('grabTasks');
+
+                      }).catch( (err) => console.log(err) );                
             }
+
 
         }
     }
